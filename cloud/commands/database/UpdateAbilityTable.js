@@ -1,91 +1,89 @@
+'use strict';
 var _ = require('underscore');
-var SMITE_API = require("cloud/SmiteAPI.js");
-var HELPER = require("cloud/commands/CommandHelper.js");
+var SMITE_API = require('cloud/SmiteAPI.js');
+var HELPER = require('cloud/commands/CommandHelper.js');
 
-setServerAbilities=function(gods)
-{
-	var saveArray=[];
-	var promiseArray=[];
-	var dbGods=Parse.Object.extend("God");
+var fetchServerAbility = function(id, name, description, passive, god) {
+  return HELPER.fetchServerObject('Ability', 'AbilityId', id).then(function(result) {
+    return {'obj':result, 'id':id, 'name':name, 'description':description, 'passive':passive, 'god':god};
+  });
+};
 
-	_.each(gods,function(god){
-		var promise = new Parse.Promise();
-		promiseArray.push(promise);
-		var query = new Parse.Query(dbGods);
-		query.equalTo("GodId",god.id);
+var setAbility = function(id, name, description, passive, god) {
+  var promise = new Parse.Promise();
+  fetchServerAbility(id, name, description, passive, god).then(function(result) {
+    var abilityObject = result.obj;
+    abilityObject.set('God', result.god);
+    abilityObject.set('AbilityId', result.id);
+    abilityObject.set('Name', result.name);
+    abilityObject.set('Cooldown', result.description.cooldown);
+    abilityObject.set('Cost', result.description.cost);
+    abilityObject.set('Description', result.description.description);
+    abilityObject.set('SecondaryDescription', result.description.secondaryDescription);
+    abilityObject.set('Passive', result.passive);
 
-		query.find({
-			success: function(result){
-				var promises=[];
-				promises.push(setAbility(god.AbilityId1, god.Ability1, god.abilityDescription1.itemDescription, false, result[0]).then(function(obj){saveArray.push(obj);}));
-				promises.push(setAbility(god.AbilityId2, god.Ability2, god.abilityDescription2.itemDescription, false, result[0]).then(function(obj){saveArray.push(obj);}));
-				promises.push(setAbility(god.AbilityId3, god.Ability3, god.abilityDescription3.itemDescription, false, result[0]).then(function(obj){saveArray.push(obj);}));
-				promises.push(setAbility(god.AbilityId4, god.Ability4, god.abilityDescription4.itemDescription, false, result[0]).then(function(obj){saveArray.push(obj);}));
-				promises.push(setAbility(god.AbilityId5, god.Ability5, god.abilityDescription5.itemDescription, true, result[0]).then(function(obj){saveArray.push(obj);}));
+    _.each(result.description.menuitems, function(item) {
+      abilityObject.add('Traits', item);
+    });
 
-				Parse.Promise.when(promises).then(function(){
-					promise.resolve(true)
-				});
-			},
-			error: function(error){
-				promise.reject("Error fetching god: " + god.id);
-			}
-		});
-		
-	});
+    _.each(result.description.rankitems, function(item) {
+      abilityObject.add('Ranks', item);
+    });
+    promise.resolve(abilityObject);
+  }, function(error) {
+    promise.reject(error);
+  });
 
-	return Parse.Promise.when(promiseArray).then(function(result){
-		return Parse.Object.saveAll(saveArray);
-	});	
-}
+  return promise;
+};
 
-setAbility=function(id, name, description, passive, god)
-{
-	var promise = new Parse.Promise();
-	fetchServerAbility(id, name, description, passive, god).then(function(result){
-		var abilityObject = result.obj;
-		abilityObject.set("God", result.god);
-		abilityObject.set("AbilityId", result.id);
-		abilityObject.set("Name", result.name);
-		abilityObject.set("Cooldown", result.description.cooldown);
-		abilityObject.set("Cost", result.description.cost);
-		abilityObject.set("Description", result.description.description);
-		abilityObject.set("SecondaryDescription", result.description.secondaryDescription);
-		abilityObject.set("Passive", result.passive);
+var setServerAbilities = function(gods) {
+  var saveArray = [];
+  var promiseArray = [];
+  var dbGods = Parse.Object.extend('God');
 
-		_.each(result.description.menuitems,function(item){
-			abilityObject.add("Traits", item);
-		});
+  _.each(gods, function(god) {
+    var promise = new Parse.Promise();
+    promiseArray.push(promise);
+    var query = new Parse.Query(dbGods);
+    query.equalTo('GodId', god.id);
 
-		_.each(result.description.rankitems,function(item){
-			abilityObject.add("Ranks", item);
-		});
-		promise.resolve(abilityObject);
-	},function(error){
-		promise.reject(error);
-	});
-	
-	return promise;
-}
+    query.find({
+      success: function(result) {
+        var promises = [];
+        promises.push(setAbility(god.AbilityId1, god.Ability1, god.abilityDescription1.itemDescription, false, result[0]).then(function(obj) {saveArray.push(obj);}));
+        promises.push(setAbility(god.AbilityId2, god.Ability2, god.abilityDescription2.itemDescription, false, result[0]).then(function(obj) {saveArray.push(obj);}));
+        promises.push(setAbility(god.AbilityId3, god.Ability3, god.abilityDescription3.itemDescription, false, result[0]).then(function(obj) {saveArray.push(obj);}));
+        promises.push(setAbility(god.AbilityId4, god.Ability4, god.abilityDescription4.itemDescription, false, result[0]).then(function(obj) {saveArray.push(obj);}));
+        promises.push(setAbility(god.AbilityId5, god.Ability5, god.abilityDescription5.itemDescription, true, result[0]).then(function(obj) {saveArray.push(obj);}));
 
-fetchServerAbility=function(id, name, description, passive, god)
-{
-	return HELPER.fetchServerObject("Ability", "AbilityId", id).then(function(result){
-		return {'obj':result, 'id':id, 'name':name, 'description':description, 'passive':passive, 'god':god};
-	});
-}
+        Parse.Promise.when(promises).then(function() {
+          promise.resolve(true);
+        });
+      },
+      error: function() {
+        promise.reject('Error fetching god: ' + god.id);
+      }
+    });
 
-exports.updateTable=function(){	
-	return SMITE_API.getGods().then(setServerAbilities);
-}
+  });
 
-Parse.Cloud.job("updateAbilityTable", function(request, status){
-	exports.updateTable().then(function(objs){
-		console.log("Updated ability table");
-		status.success("Updated ability table");
-	},
-	function(error){
-		console.error("Error updating ability table: " + error.message);
-		status.error("Error updating ability table: " + error.message);
+  return Parse.Promise.when(promiseArray).then(function() {
+    return Parse.Object.saveAll(saveArray);
+  });
+};
+
+exports.updateTable = function() {
+  return SMITE_API.getGods().then(setServerAbilities);
+};
+
+Parse.Cloud.job('updateAbilityTable', function(request, status) {
+  exports.updateTable().then(function() {
+    console.log('Updated ability table');
+    status.success('Updated ability table');
+  },
+	function(error) {
+  console.error('Error updating ability table: ' + error.message);
+  status.error('Error updating ability table: ' + error.message);
 	});
 });
