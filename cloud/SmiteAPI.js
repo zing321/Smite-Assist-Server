@@ -19,15 +19,11 @@ function request(method, sig, param) {
   session.getSession().then(function(sessionId) {
 
     //Log request to console
-    console.log('http://api.smitegame.com/smiteapi.svc/' +
-      method + 'JSON/' + DEV_ID + '/' + sig + '/' + sessionId + '/' +
-      MOMENT.utc().format('YYYYMMDDHHmmss') + '/' + param);
+    console.log('http://api.smitegame.com/smiteapi.svc/' + method + 'JSON/' + DEV_ID + '/' + sig + '/' + sessionId + '/' + MOMENT.utc().format('YYYYMMDDHHmmss') + '/' + param);
 
     Parse.Cloud.httpRequest(
     {
-      url:'http://api.smitegame.com/smiteapi.svc/' +
-        method + 'JSON/' + DEV_ID + '/' + sig + '/' + sessionId + '/' +
-        MOMENT.utc().format('YYYYMMDDHHmmss') + '/' + param,
+      url:'http://api.smitegame.com/smiteapi.svc/' + method + 'JSON/' + DEV_ID + '/' + sig + '/' + sessionId + '/' + MOMENT.utc().format('YYYYMMDDHHmmss') + '/' + param,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -77,7 +73,7 @@ exports.getPlayer = function(playerName) {
 
 exports.getMatchDetails = function(matchID) {
   var promise = new Parse.Promise();
-  var method = 'getmatchdetails'
+  var method = 'getmatchdetails';
   var sig = getSignature(method);
   request(method, sig, matchID).then(function(match) {
     promise.resolve(match);
