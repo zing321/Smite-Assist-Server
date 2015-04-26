@@ -28,6 +28,13 @@ var setGodImages = function(gods) {
     }).then(function(chainData3) {
       chainData3[0].set(ENUMS.Table.god, chainData3[1]);
       return chainData3[0].save();
+    }).then(function() {
+      //Continue
+      return Parse.Promise.as();
+    },
+    function() {
+      //On error continue with the promise stack.
+      return Parse.Promise.as();
     }));
   });
   return Parse.Promise.when(promises);

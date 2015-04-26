@@ -34,6 +34,7 @@ function SmiteAPISession(id, key) {
     });
     return promise;
   }
+
   function createNewSession(id, key) {
     var promise = new Parse.Promise();
     var time = MOMENT.utc();
@@ -47,8 +48,7 @@ function SmiteAPISession(id, key) {
       headers: {
         'Content-Type': 'application/json'
       },
-      success: function(httpResponse)
-      {
+      success: function(httpResponse) {
         serverResponse = JSON.parse(httpResponse.text);
         if (serverResponse.ret_msg === 'Approved') {
           session = serverResponse.session_id;
@@ -65,6 +65,7 @@ function SmiteAPISession(id, key) {
     });
     return promise;
   }
+
   function saveToDB() {
     var promise = new Parse.Promise();
     var query = new Parse.Query('Session');
