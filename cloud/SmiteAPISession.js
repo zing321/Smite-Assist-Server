@@ -42,8 +42,7 @@ function SmiteAPISession(id, key) {
     var md5 = CRYPTO.createHash('md5');
     md5.update(id + 'createsession' + key + time.utc().format(TIME_FORMAT));
     var signature = md5.digest('hex');
-    Parse.Cloud.httpRequest(
-    {
+    Parse.Cloud.httpRequest({
       url: 'http://api.smitegame.com/smiteapi.svc/createsessionJSON/' + id + '/' + signature + '/' + time.utc().format(TIME_FORMAT),
       headers: {
         'Content-Type': 'application/json'
@@ -54,7 +53,7 @@ function SmiteAPISession(id, key) {
           session = serverResponse.session_id;
           timestamp = time.utc().format(TIME_FORMAT);
           console.log('Session: ' + session + ', created at: ' + timestamp);
-          promise.resolve(true);
+          promise.resolve();
         } else {
           promise.reject('Session creation not approved!');
         }
@@ -73,7 +72,9 @@ function SmiteAPISession(id, key) {
       success: function(row) {
         row.set('SessionID', session);
         row.set('timestamp', timestamp);
-        row.save().then(promise.resolve);
+        row.save().then(function() {
+          promise.resolve();
+        });
       },
       error: function(error) {
         promise.reject('error in saveToDB ' + error.message);
@@ -83,29 +84,17 @@ function SmiteAPISession(id, key) {
   }
 
   function loadOrCreate(id, key) {
-    var promise = loadFromDB().then(function(loadPass) {
+    return loadFromDB().then(function(loadPass) {
       if (!loadPass) {
-        return createNewSession(id, key).then(function() {
-          return saveToDB();
-        });
+        return createNewSession(id, key).then(saveToDB);
       }
     });
-    return promise;
   }
 
   this.getSession = function() {
     var promise = new Parse.Promise();
-    loadFromDB().then(function(isValid) {
-      if (isValid) {
-        promise.resolve(session);
-      } else {
-        loadOrCreate(id, key).then(function() {
-          promise.resolve(session);
-        },
-        function(error) {
-          promise.reject(error);
-        });
-      }
+    loadOrCreate(id, key).then(function() {
+      promise.resolve(session);
     },
     function(error) {
       promise.reject(error);
