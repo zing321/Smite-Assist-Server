@@ -72,11 +72,9 @@ function request(method, sig, time, param) {
   return promise;
 }
 
-exports.getItems = function() {
+function methodRequest(method, param) {
   var promise = new Parse.Promise();
-  var method = 'getitems';
   getSignature(method).then(function(sigTime) {
-    var param = '1';
     request(method, sigTime.sig, sigTime.time, param).then(function(items) {
       promise.resolve(items);
     },
@@ -85,167 +83,48 @@ exports.getItems = function() {
     });
   });
   return promise;
+}
+
+exports.getItems = function() {
+  return methodRequest('getitems', 1);
 };
 
 exports.getPlayer = function(playerName) {
-  var promise = new Parse.Promise();
-  var method = 'getplayer';
-  getSignature(method).then(function(sigTime) {
-    request(method, sigTime.sig, sigTime.time, playerName).then(function(player) {
-      promise.resolve(player);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getplayer', playerName);
 };
 
 exports.getMatchDetails = function(matchID) {
-  var promise = new Parse.Promise();
-  var method = 'getmatchdetails';
-  getSignature(method).then(function(sigTime) {
-    request(method, sigTime.sig, sigTime.time, matchID).then(function(match) {
-      promise.resolve(match);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getmatchdetails', matchID);
 };
 
 exports.getMatchHistory = function(playerName) {
-  var promise = new Parse.Promise();
-  var method = 'getmatchhistory';
-  getSignature(method).then(function(sigTime) {
-    request(method, sigTime.sig, sigTime.time, playerName).then(function(matches) {
-      promise.resolve(matches);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getmatchhistory', playerName);
 };
 
 exports.getQueueStats = function(playerName, queue) {
-  var promise = new Parse.Promise();
-  var method = 'getqueuestats';
-  getSignature(method).then(function(sigTime) {
-    var param = playerName + '/' + queue;
-    request(method, sigTime.sig, sigTime.time, param).then(function(stats) {
-      promise.resolve(stats);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getqueuestats', playerName + '/' + queue);
 };
 
 exports.getDataUsed = function() {
-  var promise = new Parse.Promise();
-  var method = 'getdataused';
-  getSignature(method).then(function(sigTime) {
-    var param = '';
-    request(method, sigTime.sig, sigTime.time, param).then(function(details) {
-      promise.resolve(details);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getdataused', '');
 };
 
 exports.getGods = function() {
-  var promise = new Parse.Promise();
-  var method = 'getgods';
-  getSignature(method).then(function(sigTime) {
-    var param = '1';
-    request(method, sigTime.sig, sigTime.time, param).then(function(matches) {
-      promise.resolve(matches);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getgods', '1');
 };
 
-/*
-// Depricated by getmatchdetails
-//
-// exports.getDemoDetails=function(matchID)
-// {
-//  var promise=new Parse.Promise();
-//  var method='getdemodetails'
-//  var sig=getSignature(method);
-//  request(method,sig,matchID).then(function(details)
-//  {
-//    promise.resolve(details)
-//  },
-//  function(error)
-//  {
-//    promise.reject(error);
-//  });
-//  return promise
-// }
-*/
-
 exports.searchTeams = function(searchTerm) {
-  var promise = new Parse.Promise();
-  var method = 'searchteams';
-  getSignature(method).then(function(sigTime) {
-    request(method, sigTime.sig, sigTime.time, searchTerm).then(function(teams) {
-      promise.resolve(teams);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('searchteams', searchTerm);
 };
 
 exports.getTeamMatchHistory = function(teamID) {
-  var promise = new Parse.Promise();
-  var method = 'getteammatchhistory';
-  getSignature(method).then(function(sigTime) {
-    request(method, sigTime.sig, sigTime.time, teamID).then(function(matches) {
-      promise.resolve(matches);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getteammatchhistory', teamID);
 };
 
 exports.getTeamPlayers = function(teamID) {
-  var promise = new Parse.Promise();
-  var method = 'getteamplayers';
-  getSignature(method).then(function(sigTime) {
-    request(method, sigTime.sig, sigTime.time, teamID).then(function(players) {
-      promise.resolve(players);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getteamplayers', teamID);
 };
 
 exports.getTeamDetails = function(teamID) {
-  var promise = new Parse.Promise();
-  var method = 'getteamdetails';
-  getSignature(method).then(function(sigTime) {
-    request(method, sigTime.sig, sigTime.time, teamID).then(function(details) {
-      promise.resolve(details);
-    },
-    function(error) {
-      promise.reject(error);
-    });
-  });
-  return promise;
+  return methodRequest('getteamdetails', teamID);
 };

@@ -1,11 +1,12 @@
 'use strict';
 var _ = require('underscore');
 var SMITE_API = require('cloud/SmiteAPI.js');
+var ENUMS = require('cloud/Enums.js');
 
 var setServerItems = function(items) {
   var saveArray = [];
   _.each(items, function(item) {
-    var itemsObject = new Parse.Object('Item');
+    var itemsObject = new Parse.Object(ENUMS.Table.item);
     itemsObject.set('Name', item.DeviceName);
     itemsObject.set('Description', item.ItemDescription.Description);
     itemsObject.set('SecondaryDescription', item.ItemDescription.SecondaryDescription);

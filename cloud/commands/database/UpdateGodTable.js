@@ -2,9 +2,10 @@
 var _ = require('underscore');
 var SMITE_API = require('cloud/SmiteAPI.js');
 var HELPER = require('cloud/commands/CommandHelper.js');
+var ENUMS = require('cloud/Enums.js');
 
 var fetchServerGod = function(god) {
-  return HELPER.fetchServerObject('God', 'GodId', god.id).then(function(result) {
+  return HELPER.fetchServerObject(ENUMS.Table.god, 'GodId', god.id).then(function(result) {
     return [result, god];
   });
 };
