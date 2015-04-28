@@ -17,18 +17,19 @@ var UPDATE_LEAF_TABLES = [
 	require('cloud/commands/database/UpdateGodImageTable.js'),
 	require('cloud/commands/database/UpdateAbilityImageTable.js'),
 	require('cloud/commands/database/UpdateItemImageTable.js'),
+	require('cloud/commands/database/UpdateItemHierarchy.js'),
 ];
 
-var updateTablesInParallel = function(tables) {
+function updateTablesInParallel(tables) {
   var promises = [];
   _.each(tables, function(updater) {
     promises.push(updater.updateTable());
   });
 
   return Parse.Promise.when(promises);
-};
+}
 
-var updateTablesInSeries = function(tables) {
+function updateTablesInSeries(tables) {
   var promise = Parse.Promise.as();
   _.each(tables, function(updater) {
     promise = promise.then(function() {
@@ -36,7 +37,7 @@ var updateTablesInSeries = function(tables) {
     });
   });
   return promise;
-};
+}
 
 Parse.Cloud.job('updateTables', function(request, status) {
   //update root tables in parallel

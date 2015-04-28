@@ -9,6 +9,21 @@ function SmiteAPISession(id, key) {
   var session = '';
   var timestamp;
 
+  function isCachedSessionValid() {
+    if (session !== '') {
+      var currentTime = MOMENT.utc();
+      var rawTimestamp = MOMENT.utc(timestamp, TIME_FORMAT);
+      rawTimestamp.add('m', MIN_SESSION_TIME);
+      if (currentTime >= rawTimestamp) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
   function loadFromDB() {
     var promise = new Parse.Promise();
     var query = new Parse.Query('Session');
@@ -84,11 +99,21 @@ function SmiteAPISession(id, key) {
   }
 
   function loadOrCreate(id, key) {
-    return loadFromDB().then(function(loadPass) {
-      if (!loadPass) {
-        return createNewSession(id, key).then(saveToDB);
-      }
-    });
+    if (loadOrCreate.semaphore === undefined) {
+      loadOrCreate.semaphore = Parse.Promise.as();
+    }
+
+    //Only if the cached session is invalid pause all request threads and fetch a new session
+    if (!isCachedSessionValid()) {
+      loadOrCreate.semaphore = loadOrCreate.semaphore
+        .then(loadFromDB)
+        .then(function(loadPass) {
+          if (!loadPass) {
+            return createNewSession(id, key).then(saveToDB);
+          }
+        });
+    }
+    return loadOrCreate.semaphore;
   }
 
   this.getSession = function() {
