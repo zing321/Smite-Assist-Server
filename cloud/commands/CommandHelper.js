@@ -62,7 +62,9 @@ var getImageFromUrl = function(nUrl) {
       promise.resolve([image, md5sum]);
     },
     error: function(error) {
-      promise.reject('Error ' + error.status + ' in getting image: ' + nUrl);
+      var errorString = 'Error ' + error.status + ' in getting image: ' + nUrl;
+      console.log(errorString);
+      promise.reject(errorString);
     }
   });
 

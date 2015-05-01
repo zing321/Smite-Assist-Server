@@ -52,6 +52,7 @@ var setServerGods = function(gods) {
 
       godsObject.set('GodId', god.id);
       saveArray.push(godsObject);
+      return Parse.Promise.as();
     }));
   });
   return Parse.Promise.when(promises).then(function() {
