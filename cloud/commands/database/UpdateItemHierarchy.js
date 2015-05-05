@@ -1,5 +1,5 @@
 'use strict';
-var _ = require('underscore');
+var _ = require('cloud/vendor/underscore.js');
 var SMITE_API = require('cloud/SmiteAPI.js');
 var ENUMS = require('cloud/Enums.js');
 var HELPER = require('cloud/commands/CommandHelper.js');

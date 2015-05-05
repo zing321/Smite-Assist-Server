@@ -6,12 +6,14 @@ module.exports.Table = {
   'ability': 'Ability',
   'item': 'Item',
   'godImage': 'GodImage',
-  'abilityImage': 'AbilityImage'
+  'abilityImage': 'AbilityImage',
+  'itemImage': 'ItemImage'
 };
 
 module.exports.Url = {
   'api': BASE_API_URL,
   'godIcon': BASE_IMAGE_URL + 'smite-god-icons/',
   'godCard': BASE_IMAGE_URL + 'smite-god-cards/',
-  'abilityIcon':  BASE_IMAGE_URL + 'smite-god-abilities/'
+  'abilityIcon':  BASE_IMAGE_URL + 'smite-god-abilities/',
+  'itemIcon': BASE_IMAGE_URL + 'smite-items/'
 };

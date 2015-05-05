@@ -1,5 +1,5 @@
 'use strict';
-var _ = require('underscore');
+var _ = require('cloud/vendor/underscore.js');
 
 //Tables that must be updated first in any order
 var UPDATE_ROOT_TABLES = [
