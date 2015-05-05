@@ -5,7 +5,8 @@ module.exports.Table = {
   'god': 'God',
   'ability': 'Ability',
   'item': 'Item',
-  'godImage': 'GodImage'
+  'godImage': 'GodImage',
+  'abilityImage': 'AbilityImage'
 };
 
 module.exports.Url = {

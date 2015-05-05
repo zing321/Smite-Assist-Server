@@ -45,7 +45,6 @@ exports.updateTable = function() {
 };
 
 Parse.Cloud.job('updateGodImageTable', function(request, status) {
-  console.log('updating images');
   exports.updateTable().then(function() {
     console.log('Updated god image table');
     status.success('Updated god image table');

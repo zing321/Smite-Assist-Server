@@ -15,6 +15,7 @@ exports.fetchAllServerObjects = function(dbName) {
   var extension = Parse.Object.extend(dbName);
   var query = new Parse.Query(extension);
   var promise = new Parse.Promise();
+  query.limit(1000);
   query.find({
     success: function(results) {
       promise.resolve(results);
