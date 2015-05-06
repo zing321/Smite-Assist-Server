@@ -24,7 +24,6 @@ var setServerGods = function(gods) {
         godsObject.add('BasicAttack', item);
       });
 
-      godsObject.set('Cons', god.Cons);
       godsObject.set('HP5PerLevel', god.HP5PerLevel);
       godsObject.set('Health', god.Health);
       godsObject.set('HealthPerFive', god.HealthPerFive);
