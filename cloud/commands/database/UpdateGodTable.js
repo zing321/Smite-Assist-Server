@@ -17,6 +17,7 @@ var setServerGods = function(gods) {
     promises.push(fetchServerGod(aGod).then(function(results) {
       var godsObject = results[0];
       var god = results[1];
+      godsObject.clear();
       godsObject.set('AttackSpeed', god.AttackSpeed);
       godsObject.set('AttackSpeedPerLevel', god.AttackSpeedPerLevel);
 

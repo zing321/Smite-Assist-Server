@@ -17,6 +17,7 @@ function setServerItems(items) {
     promises.push(fetchServerItem(aItem).then(function(results) {
       var itemsObject = results[0];
       var item = results[1];
+      itemsObject.clear();
       itemsObject.set('Name', item.DeviceName);
       itemsObject.set('Description', item.ItemDescription.Description);
       itemsObject.set('SecondaryDescription', item.ItemDescription.SecondaryDescription);

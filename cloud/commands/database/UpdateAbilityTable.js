@@ -14,6 +14,7 @@ var setAbility = function(id, name, description, passive, god) {
   var promise = new Parse.Promise();
   fetchServerAbility(id, name, description, passive, god).then(function(result) {
     var abilityObject = result.obj;
+    abilityObject.clear();
     abilityObject.set('God', result.god);
     abilityObject.set('AbilityId', result.id);
     abilityObject.set('Name', result.name);
