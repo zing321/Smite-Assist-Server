@@ -21,7 +21,6 @@ var setAbility = function(id, name, description, passive, god) {
     abilityObject.set('Cooldown', result.description.cooldown);
     abilityObject.set('Cost', result.description.cost);
     abilityObject.set('Description', result.description.description);
-    abilityObject.set('SecondaryDescription', result.description.secondaryDescription);
     abilityObject.set('Passive', result.passive);
 
     _.each(result.description.menuitems, function(item) {
