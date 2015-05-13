@@ -26,6 +26,9 @@ function setServerItems(items) {
       itemsObject.set('ShortDesc', item.ShortDesc);
       itemsObject.set('Type', item.Type);
 
+      //Set default to be a empty array
+      itemsObject.Set('Traits', []);
+
       _.each(item.ItemDescription.Menuitems, function(menuItem) {
         itemsObject.add('Traits', menuItem);
       });

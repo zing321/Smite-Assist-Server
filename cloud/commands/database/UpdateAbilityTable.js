@@ -23,6 +23,10 @@ var setAbility = function(id, name, description, passive, god) {
     abilityObject.set('Description', result.description.description);
     abilityObject.set('Passive', result.passive);
 
+    //Set default to be a empty array
+    abilityObject.set('Traits', []);
+    abilityObject.set('Ranks', []);
+
     _.each(result.description.menuitems, function(item) {
       abilityObject.add('Traits', item);
     });

@@ -21,6 +21,9 @@ var setServerGods = function(gods) {
       godsObject.set('AttackSpeed', god.AttackSpeed);
       godsObject.set('AttackSpeedPerLevel', god.AttackSpeedPerLevel);
 
+      //Set default to be an empty array
+      godsObject.set('basicAttack', []);
+
       _.each(god.basicAttack.itemDescription.menuitems, function(item) {
         godsObject.add('BasicAttack', item);
       });
