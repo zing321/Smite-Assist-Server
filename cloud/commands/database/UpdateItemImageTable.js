@@ -20,7 +20,7 @@ function setItemImages(items, itemObjects) {
   var promises = [];
   _.each(itemObjects, function(itemObject) {
     promises.push(fetchServerObjectChain(itemObject).then(function(chainData) {
-      var item = _.findWhere(items, {ItemId: itemObject.get('ItemId')});
+      var item = _.findWhere(items, {ItemId: chainData[1].get('ItemId')});
       var fileName = item.IconId + '.jpg';
       return setImageChain(ENUMS.Url.itemIcon + fileName, chainData[0], 'Icon', chainData[1], fileName);
     }).then(function(chainData2) {

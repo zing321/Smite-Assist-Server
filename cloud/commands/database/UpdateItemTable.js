@@ -27,7 +27,7 @@ function setServerItems(items) {
       itemsObject.set('Type', item.Type);
 
       //Set default to be a empty array
-      itemsObject.Set('Traits', []);
+      itemsObject.set('Traits', []);
 
       _.each(item.ItemDescription.Menuitems, function(menuItem) {
         itemsObject.add('Traits', menuItem);
