@@ -26,8 +26,10 @@ var setGodImages = function(gods) {
       var fileName = chainData2[1].get('GodId') + 'c.jpg';
       return setImageChain(ENUMS.Url.godCard + fileName, chainData2[0], 'Card', chainData2[1], fileName);
     }).then(function(chainData3) {
-      chainData3[0].set(ENUMS.Table.god, chainData3[1]);
-      return chainData3[0].save();
+      chainData3[1].set('Image', chainData3[0]);
+      return chainData3[0].save().then(function() {
+        return chainData3[1].save();
+      });
     }).then(function() {
       //Continue
       return Parse.Promise.as();

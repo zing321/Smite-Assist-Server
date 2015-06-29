@@ -15,7 +15,6 @@ var setAbility = function(id, name, description, passive, god) {
   fetchServerAbility(id, name, description, passive, god).then(function(result) {
     var abilityObject = result.obj;
     abilityObject.clear();
-    abilityObject.set('God', result.god);
     abilityObject.set('AbilityId', result.id);
     abilityObject.set('Name', result.name);
     abilityObject.set('Cooldown', result.description.cooldown);
@@ -43,7 +42,8 @@ var setAbility = function(id, name, description, passive, god) {
 };
 
 var setServerAbilities = function(gods) {
-  var saveArray = [];
+  var abilitySaveArray = [];
+  var godSaveArray = [];
   var promiseArray = [];
   var dbGods = Parse.Object.extend('God');
 
@@ -56,11 +56,28 @@ var setServerAbilities = function(gods) {
     query.find({
       success: function(result) {
         var promises = [];
-        promises.push(setAbility(god.AbilityId1, god.Ability1, god.abilityDescription1.itemDescription, false, result[0]).then(function(obj) {saveArray.push(obj);}));
-        promises.push(setAbility(god.AbilityId2, god.Ability2, god.abilityDescription2.itemDescription, false, result[0]).then(function(obj) {saveArray.push(obj);}));
-        promises.push(setAbility(god.AbilityId3, god.Ability3, god.abilityDescription3.itemDescription, false, result[0]).then(function(obj) {saveArray.push(obj);}));
-        promises.push(setAbility(god.AbilityId4, god.Ability4, god.abilityDescription4.itemDescription, false, result[0]).then(function(obj) {saveArray.push(obj);}));
-        promises.push(setAbility(god.AbilityId5, god.Ability5, god.abilityDescription5.itemDescription, true, result[0]).then(function(obj) {saveArray.push(obj);}));
+        promises.push(setAbility(god.AbilityId1, god.Ability1, god.abilityDescription1.itemDescription, false, result[0]).then(function(obj) {
+          abilitySaveArray.push(obj);
+          result[0].set('Ability1', obj);
+        }));
+        promises.push(setAbility(god.AbilityId2, god.Ability2, god.abilityDescription2.itemDescription, false, result[0]).then(function(obj) {
+          abilitySaveArray.push(obj);
+          result[0].set('Ability2', obj);
+        }));
+        promises.push(setAbility(god.AbilityId3, god.Ability3, god.abilityDescription3.itemDescription, false, result[0]).then(function(obj) {
+          abilitySaveArray.push(obj);
+          result[0].set('Ability3', obj);
+        }));
+        promises.push(setAbility(god.AbilityId4, god.Ability4, god.abilityDescription4.itemDescription, false, result[0]).then(function(obj) {
+          abilitySaveArray.push(obj);
+          result[0].set('Ability4', obj);
+        }));
+        promises.push(setAbility(god.AbilityId5, god.Ability5, god.abilityDescription5.itemDescription, true, result[0]).then(function(obj) {
+          abilitySaveArray.push(obj);
+          result[0].set('Ability5', obj);
+        }));
+
+        godSaveArray.push(result[0]);
 
         Parse.Promise.when(promises).then(function() {
           promise.resolve(true);
@@ -74,7 +91,9 @@ var setServerAbilities = function(gods) {
   });
 
   return Parse.Promise.when(promiseArray).then(function() {
-    return Parse.Object.saveAll(saveArray);
+    return Parse.Object.saveAll(abilitySaveArray);
+  }).then(function() {
+    return Parse.Object.saveAll(godSaveArray);
   });
 };
 
